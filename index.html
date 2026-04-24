@@ -371,8 +371,8 @@ function renderPreview() {
 
     for (const e of events) {
       const cleanedTitle = cleanTitle(e.title, e.tag);
-      const mentionPart = e.mention ? `${e.mention} ` : '';
-      text += `${e.time} ${mentionPart}${cleanedTitle}\n`;
+      const sourcePart = e.mention ? e.mention : e.calName;
+      text += `${e.time}\n${sourcePart}\n${cleanedTitle}\n\n`;
     }
     return text.trimEnd();
   };

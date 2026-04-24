@@ -7,107 +7,37 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0e0e10;
-    --surface: #18181c;
-    --surface2: #222228;
-    --border: #2e2e38;
-    --accent: #e8d5b0;
-    --accent2: #b8a882;
-    --text: #f0ece4;
-    --text-dim: #888880;
-    --text-muted: #555550;
-    --today: #c8a96e;
-    --tomorrow: #7eb8c8;
-    --green: #7ec87e;
-    --line-green: #06c755;
+    --bg: #0e0e10; --surface: #18181c; --surface2: #222228; --border: #2e2e38;
+    --accent: #e8d5b0; --accent2: #b8a882; --text: #f0ece4; --text-dim: #888880;
+    --text-muted: #555550; --today: #c8a96e; --tomorrow: #7eb8c8;
+    --green: #7ec87e; --line-green: #06c755;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { font-family: 'Noto Sans JP', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; max-width: 480px; margin: 0 auto; padding-bottom: env(safe-area-inset-bottom); }
 
-  html, body {
-    font-family: 'Noto Sans JP', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    max-width: 480px;
-    margin: 0 auto;
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  /* ===== ヘッダー ===== */
-  .header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 16px 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
+  .header { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--border); padding: 14px 16px 12px; display: flex; align-items: center; justify-content: space-between; }
   .header-left { display: flex; flex-direction: column; }
   .header-label { font-size: 10px; font-family: 'DM Mono', monospace; letter-spacing: 0.2em; color: var(--text-muted); text-transform: uppercase; }
   .header-title { font-size: 20px; font-weight: 700; color: var(--accent); letter-spacing: -0.02em; line-height: 1.2; }
-
   .header-right { display: flex; align-items: center; gap: 8px; }
-
-  .icon-btn {
-    width: 40px; height: 40px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--surface);
-    color: var(--text-dim);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; font-size: 16px;
-    transition: all 0.15s;
-  }
+  .icon-btn { width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text-dim); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: all 0.15s; }
   .icon-btn:active { background: var(--surface2); transform: scale(0.95); }
 
-  /* ===== 日付バー ===== */
-  .date-bar {
-    display: flex; justify-content: space-between;
-    padding: 10px 16px;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-  }
+  .date-bar { display: flex; justify-content: space-between; padding: 10px 16px; background: var(--surface); border-bottom: 1px solid var(--border); }
   .date-item { display: flex; align-items: center; gap: 6px; }
   .date-dot { width: 6px; height: 6px; border-radius: 50%; }
-  .dot-today { background: var(--today); }
-  .dot-tomorrow { background: var(--tomorrow); }
+  .dot-today { background: var(--today); } .dot-tomorrow { background: var(--tomorrow); }
   .date-text { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--text-dim); }
 
-  /* ===== タブ ===== */
-  .tabs {
-    display: flex;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-  }
-  .tab {
-    flex: 1; padding: 14px 8px;
-    border: none; background: transparent;
-    color: var(--text-muted);
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 14px; font-weight: 500;
-    cursor: pointer; transition: all 0.2s;
-    position: relative;
-  }
-  .tab::after {
-    content: ''; position: absolute; bottom: 0; left: 20%; width: 60%; height: 2px;
-    border-radius: 2px; background: transparent; transition: background 0.2s;
-  }
-  .tab.today.active { color: var(--today); }
-  .tab.today.active::after { background: var(--today); }
-  .tab.tomorrow.active { color: var(--tomorrow); }
-  .tab.tomorrow.active::after { background: var(--tomorrow); }
-  .tab.both.active { color: var(--accent); }
-  .tab.both.active::after { background: var(--accent); }
+  .tabs { display: flex; background: var(--surface); border-bottom: 1px solid var(--border); }
+  .tab { flex: 1; padding: 14px 8px; border: none; background: transparent; color: var(--text-muted); font-family: 'Noto Sans JP', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; position: relative; }
+  .tab::after { content: ''; position: absolute; bottom: 0; left: 20%; width: 60%; height: 2px; border-radius: 2px; background: transparent; transition: background 0.2s; }
+  .tab.today.active { color: var(--today); } .tab.today.active::after { background: var(--today); }
+  .tab.tomorrow.active { color: var(--tomorrow); } .tab.tomorrow.active::after { background: var(--tomorrow); }
+  .tab.both.active { color: var(--accent); } .tab.both.active::after { background: var(--accent); }
 
-  /* ===== スクロールエリア ===== */
   .scroll-area { padding: 16px 16px 220px; }
 
-  /* ===== スケジュール ===== */
   .schedule-section { margin-bottom: 20px; }
   .section-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
   .section-badge { font-size: 11px; font-family: 'DM Mono', monospace; letter-spacing: 0.08em; padding: 4px 12px; border-radius: 20px; font-weight: 500; }
@@ -115,13 +45,12 @@
   .badge-tomorrow { background: rgba(126,184,200,0.15); color: var(--tomorrow); border: 1px solid rgba(126,184,200,0.3); }
   .section-date { font-size: 12px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
 
-  .person-block { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 10px; overflow: hidden; }
-  .person-header { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: var(--surface2); border-bottom: 1px solid var(--border); }
-  .person-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
-  .person-avatar.main { background: var(--today); }
-  .person-info { flex: 1; }
-  .person-name { font-size: 14px; font-weight: 700; line-height: 1.2; }
-  .person-mention { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+  /* カレンダー別ブロック */
+  .calendar-block { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 10px; overflow: hidden; }
+  .calendar-header { display: flex; align-items: center; gap: 10px; padding: 11px 14px; background: var(--surface2); border-bottom: 1px solid var(--border); }
+  .calendar-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .calendar-name { font-size: 13px; font-weight: 700; flex: 1; }
+  .calendar-count { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
 
   .event-list { padding: 4px 0; }
   .event-item { display: flex; align-items: flex-start; gap: 12px; padding: 11px 14px; border-bottom: 1px solid rgba(46,46,56,0.5); }
@@ -130,99 +59,56 @@
   .event-title { font-size: 14px; line-height: 1.5; flex: 1; }
   .event-empty { padding: 20px; text-align: center; font-size: 13px; color: var(--text-muted); }
 
-  /* ===== ローディング ===== */
   .loading { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 48px; color: var(--text-muted); font-size: 13px; }
   .spinner { width: 18px; height: 18px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ===== 下部固定エリア ===== */
-  .bottom-bar {
-    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 100%; max-width: 480px;
-    background: var(--bg); border-top: 1px solid var(--border);
-    padding: 12px 16px;
-    padding-bottom: calc(12px + env(safe-area-inset-bottom));
-    z-index: 50;
-  }
-
-  .preview-toggle {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 14px;
-    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-    margin-bottom: 10px; cursor: pointer; transition: all 0.15s;
-  }
+  .bottom-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background: var(--bg); border-top: 1px solid var(--border); padding: 12px 16px; padding-bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 50; }
+  .preview-toggle { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; cursor: pointer; transition: all 0.15s; }
   .preview-toggle:active { background: var(--surface2); }
   .preview-toggle-label { font-size: 12px; color: var(--text-dim); font-family: 'DM Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; }
   .preview-arrow { font-size: 12px; color: var(--text-muted); transition: transform 0.2s; }
   .preview-arrow.open { transform: rotate(180deg); }
-
   .preview-content { display: none; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; max-height: 160px; overflow-y: auto; }
   .preview-content.open { display: block; }
   .preview-body { padding: 12px 14px; font-family: 'DM Mono', monospace; font-size: 11px; line-height: 1.9; color: var(--text-dim); white-space: pre-wrap; word-break: break-all; }
-
   .action-row { display: flex; gap: 8px; }
-
-  .btn-copy {
-    width: 52px; height: 52px;
-    border: 1px solid var(--border); border-radius: 12px;
-    background: var(--surface); color: var(--text-dim);
-    font-size: 18px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s; flex-shrink: 0;
-  }
+  .btn-copy { width: 52px; height: 52px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text-dim); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
   .btn-copy:active { transform: scale(0.94); }
   .btn-copy.copied { border-color: var(--green); color: var(--green); }
-
-  .btn-line {
-    flex: 1; height: 52px;
-    background: var(--line-green); color: white; border: none; border-radius: 12px;
-    font-family: 'Noto Sans JP', sans-serif; font-size: 15px; font-weight: 700;
-    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-    transition: all 0.15s; letter-spacing: 0.02em;
-  }
+  .btn-line { flex: 1; height: 52px; background: var(--line-green); color: white; border: none; border-radius: 12px; font-family: 'Noto Sans JP', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.15s; }
   .btn-line:active { transform: scale(0.97); background: #05b04a; }
 
-  /* ===== 設定ドロワー ===== */
+  /* ドロワー */
   .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 80; }
   .overlay.open { display: block; }
-
-  .drawer {
-    position: fixed; top: 0; right: -100%; width: 88%; max-width: 360px; height: 100%;
-    background: var(--bg); border-left: 1px solid var(--border); z-index: 90;
-    transition: right 0.3s ease; overflow-y: auto; padding: 0 0 48px;
-  }
+  .drawer { position: fixed; top: 0; right: -100%; width: 88%; max-width: 360px; height: 100%; background: var(--bg); border-left: 1px solid var(--border); z-index: 90; transition: right 0.3s ease; overflow-y: auto; padding: 0 0 48px; }
   .drawer.open { right: 0; }
-
-  .drawer-header {
-    padding: 20px 20px 16px; border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-    position: sticky; top: 0; background: var(--bg); z-index: 1;
-  }
+  .drawer-header { padding: 20px 20px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--bg); z-index: 1; }
   .drawer-title { font-size: 16px; font-weight: 700; color: var(--accent); }
   .drawer-close { width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text-dim); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-
   .drawer-section { padding: 20px; border-bottom: 1px solid var(--border); }
   .drawer-section-label { font-size: 10px; font-family: 'DM Mono', monospace; letter-spacing: 0.15em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; }
 
-  .input-field {
-    width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px;
-    padding: 13px 14px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 13px;
-    outline: none; margin-bottom: 8px; transition: border-color 0.2s; -webkit-appearance: none;
-  }
+  .input-field { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 13px 14px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 13px; outline: none; margin-bottom: 8px; transition: border-color 0.2s; -webkit-appearance: none; }
   .input-field:focus { border-color: var(--accent2); }
   .input-field::placeholder { color: var(--text-muted); }
-
   .btn-add { width: 100%; padding: 13px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; color: var(--accent); font-family: 'Noto Sans JP', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.15s; margin-top: 4px; }
   .btn-add:active { background: var(--border); }
 
-  .member-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
-  .member-tag { display: flex; align-items: center; gap: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; }
-  .member-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
-  .member-tag.main .member-dot { background: var(--today); }
-  .member-info { flex: 1; }
-  .member-tag-name { font-size: 13px; font-weight: 500; }
-  .member-tag-mention { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
-  .member-remove { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px; line-height: 1; padding: 4px; flex-shrink: 0; }
+  /* カレンダーリスト */
+  .calendar-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+  .calendar-tag { display: flex; align-items: center; gap: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; }
+  .cal-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .cal-info { flex: 1; min-width: 0; }
+  .cal-name { font-size: 13px; font-weight: 500; }
+  .cal-id { font-size: 10px; color: var(--text-muted); font-family: 'DM Mono', monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cal-remove { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px; line-height: 1; padding: 4px; flex-shrink: 0; }
+
+  /* 色ピッカー */
+  .color-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .color-opt { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all 0.15s; flex-shrink: 0; }
+  .color-opt.selected { border-color: white; transform: scale(1.2); }
 
   .switch-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
   .switch-row:last-child { border-bottom: none; }
@@ -234,7 +120,6 @@
   input:checked + .slider { background: rgba(200,169,110,0.2); border-color: var(--accent2); }
   input:checked + .slider:before { transform: translateX(18px); background: var(--accent); }
 
-  /* ===== トースト ===== */
   .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(40px); background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; font-size: 12px; color: var(--text); transition: all 0.25s; z-index: 200; opacity: 0; white-space: nowrap; }
   .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 </style>
@@ -288,19 +173,27 @@
     <span class="drawer-title">設定</span>
     <button class="drawer-close" onclick="closeDrawer()">✕</button>
   </div>
+
+  <!-- APIキー -->
   <div class="drawer-section">
-    <div class="drawer-section-label">Googleカレンダー</div>
-    <input type="password" class="input-field" id="apiKey" placeholder="APIキー（AIza...）">
-    <input type="text" class="input-field" id="calendarId" placeholder="カレンダーID（メール等）">
-    <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">※ APIキー未設定時はサンプル表示</div>
+    <div class="drawer-section-label">APIキー</div>
+    <input type="password" class="input-field" id="apiKey" placeholder="AIza...">
+    <div style="font-size:11px; color:var(--text-muted);">※ 未設定時はサンプル表示</div>
   </div>
+
+  <!-- カレンダー登録 -->
   <div class="drawer-section">
-    <div class="drawer-section-label">メンバー追加</div>
-    <input type="text" class="input-field" id="memberName" placeholder="名前（例：二宮）">
-    <input type="text" class="input-field" id="memberMention" placeholder="メンション（例：@二宮さん）">
-    <button class="btn-add" onclick="addMember()">＋ 追加する</button>
-    <div class="member-list" id="memberList"></div>
+    <div class="drawer-section-label">カレンダー登録</div>
+    <input type="text" class="input-field" id="calName" placeholder="カレンダー名（例：二宮）">
+    <input type="text" class="input-field" id="calId" placeholder="カレンダーID">
+    <input type="text" class="input-field" id="calMention" placeholder="LINEメンション（例：@二宮さん）空欄OK">
+    <div class="drawer-section-label" style="margin-top:4px; margin-bottom:6px;">色を選ぶ</div>
+    <div class="color-row" id="colorPicker"></div>
+    <button class="btn-add" onclick="addCalendar()">＋ 追加する</button>
+    <div class="calendar-list" id="calendarList"></div>
   </div>
+
+  <!-- 送信オプション -->
   <div class="drawer-section">
     <div class="drawer-section-label">送信オプション</div>
     <div class="switch-row">
@@ -317,106 +210,119 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// ===== 定数 =====
+const COLORS = ['#c8a96e','#7eb8c8','#7ec87e','#c87e7e','#b87ec8','#7e9bc8','#c8b47e','#7ec8b4','#c8877e','#a0a0c8'];
+let selectedColor = COLORS[0];
+
+// ===== 状態 =====
 let currentTab = 'today';
-let members = [
-  { name: '二宮', mention: '@二宮さん', main: true },
-  { name: '東', mention: '@東さん', main: false },
+let calendars = [
+  { name: '二宮', id: '', mention: '@二宮さん', color: '#c8a96e' },
 ];
-let scheduleData = { today: [], tomorrow: [] };
+let scheduleData = {}; // { calendarId: { today: [], tomorrow: [] } }
 let isLoading = false;
 
+// ===== 日付 =====
 function formatDate(d) {
   const days = ['日','月','火','水','木','金','土'];
   return `${d.getMonth()+1}/${d.getDate()}（${days[d.getDay()]}）`;
 }
-
 function updateDates() {
-  const now = new Date();
-  const tomorrow = new Date(now); tomorrow.setDate(now.getDate()+1);
+  const now = new Date(); const tomorrow = new Date(now); tomorrow.setDate(now.getDate()+1);
   document.getElementById('todayDate').textContent = '今日 ' + formatDate(now);
   document.getElementById('tomorrowDate').textContent = '明日 ' + formatDate(tomorrow);
 }
 
+// ===== サンプルデータ =====
 function getSampleData() {
   return {
-    today: [
-      { time: '10:00', title: 'クライアント打ち合わせ', person: '二宮' },
-      { time: '13:00', title: '撮影（スタジオA）', person: '二宮' },
-      { time: '13:00', title: '撮影アシスタント', person: '東' },
-      { time: '17:00', title: '編集作業', person: '二宮' },
-      { time: '19:00', title: '完パケ提出', person: '二宮' },
-    ],
-    tomorrow: [
-      { time: '09:00', title: 'ロケハン', person: '二宮' },
-      { time: '09:00', title: 'ロケハン同行', person: '東' },
-      { time: '14:00', title: '企画プレゼン', person: '二宮' },
-      { time: '18:00', title: 'スタッフMTG', person: '二宮' },
-    ]
+    '__sample__': {
+      today: [
+        { time: '10:00', title: 'クライアント打ち合わせ' },
+        { time: '13:00', title: '撮影（スタジオA）' },
+        { time: '17:00', title: '編集作業' },
+      ],
+      tomorrow: [
+        { time: '09:00', title: 'ロケハン' },
+        { time: '14:00', title: '企画プレゼン' },
+        { time: '18:00', title: 'スタッフMTG' },
+      ]
+    }
   };
 }
 
-async function fetchGoogleCalendar() {
-  const apiKey = document.getElementById('apiKey').value.trim();
-  const calendarId = document.getElementById('calendarId').value.trim();
-  if (!apiKey || !calendarId) return null;
+// ===== Google Calendar API =====
+async function fetchCalendar(apiKey, calendarId) {
   const d1 = new Date(); d1.setHours(0,0,0,0);
   const d2 = new Date(d1); d2.setDate(d1.getDate()+1);
   const d3 = new Date(d1); d3.setDate(d1.getDate()+2);
+  const base = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&singleEvents=true&orderBy=startTime`;
   try {
     const [r1, r2] = await Promise.all([
-      fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${d1.toISOString()}&timeMax=${d2.toISOString()}&singleEvents=true&orderBy=startTime`),
-      fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events?key=${apiKey}&timeMin=${d2.toISOString()}&timeMax=${d3.toISOString()}&singleEvents=true&orderBy=startTime`)
+      fetch(`${base}&timeMin=${d1.toISOString()}&timeMax=${d2.toISOString()}`),
+      fetch(`${base}&timeMin=${d2.toISOString()}&timeMax=${d3.toISOString()}`)
     ]);
     const [j1, j2] = await Promise.all([r1.json(), r2.json()]);
     const parse = items => (items||[]).map(e => ({
       time: e.start.dateTime ? new Date(e.start.dateTime).toLocaleTimeString('ja',{hour:'2-digit',minute:'2-digit'}) : '終日',
-      title: e.summary || '（無題）',
-      person: detectPerson(e.summary||'')
+      title: e.summary || '（無題）'
     }));
     return { today: parse(j1.items), tomorrow: parse(j2.items) };
-  } catch(e) { showToast('カレンダーの取得に失敗しました'); return null; }
-}
-
-function detectPerson(title) {
-  for (const m of members) { if (title.includes(m.name)) return m.name; }
-  return members[0]?.name || '';
+  } catch(e) { return null; }
 }
 
 async function refreshData() {
   isLoading = true; renderSchedule();
   const apiKey = document.getElementById('apiKey')?.value?.trim();
-  if (apiKey) {
-    const data = await fetchGoogleCalendar();
-    if (data) scheduleData = data;
-  } else {
-    await new Promise(r => setTimeout(r, 500));
+
+  if (!apiKey) {
+    await new Promise(r => setTimeout(r, 400));
     scheduleData = getSampleData();
+  } else {
+    scheduleData = {};
+    const cals = calendars.filter(c => c.id.trim());
+    if (cals.length === 0) {
+      showToast('カレンダーIDを登録してください');
+      scheduleData = getSampleData();
+    } else {
+      const results = await Promise.all(cals.map(c => fetchCalendar(apiKey, c.id)));
+      results.forEach((data, i) => {
+        if (data) scheduleData[cals[i].id] = data;
+        else showToast(`${cals[i].name}の取得に失敗しました`);
+      });
+    }
   }
   isLoading = false; renderSchedule(); renderPreview();
 }
 
+// ===== スケジュール表示 =====
 function renderSchedule() {
   const view = document.getElementById('scheduleView');
   if (isLoading) { view.innerHTML = `<div class="loading"><div class="spinner"></div>読み込み中...</div>`; return; }
+
   const tabs = currentTab === 'both' ? ['today','tomorrow'] : [currentTab];
   let html = '';
+
   for (const tab of tabs) {
     const isToday = tab === 'today';
     const d = new Date(); if (!isToday) d.setDate(d.getDate()+1);
     html += `<div class="schedule-section"><div class="section-header"><span class="section-badge ${isToday?'badge-today':'badge-tomorrow'}">${isToday?'今日':'明日'}</span><span class="section-date">${formatDate(d)}</span></div>`;
-    const events = scheduleData[tab] || [];
-    if (events.length === 0) {
-      html += `<div class="person-block"><div class="event-empty">スケジュールなし</div></div>`;
+
+    const apiKey = document.getElementById('apiKey')?.value?.trim();
+    const isSample = !apiKey || Object.keys(scheduleData).includes('__sample__');
+
+    if (isSample) {
+      const events = scheduleData['__sample__']?.[tab] || [];
+      html += renderCalendarBlock('サンプルデータ', '#555550', events, '');
     } else {
-      const grouped = {};
-      for (const m of members) grouped[m.name] = [];
-      for (const e of events) { if (grouped[e.person] !== undefined) grouped[e.person].push(e); else grouped[members[0].name].push(e); }
-      for (const m of members) {
-        const evs = grouped[m.name];
-        if (!evs || evs.length === 0) continue;
-        html += `<div class="person-block"><div class="person-header"><div class="person-avatar ${m.main?'main':''}">${m.name.slice(0,1)}</div><div class="person-info"><div class="person-name">${m.name}</div><div class="person-mention">${m.mention}</div></div></div><div class="event-list">`;
-        for (const e of evs) html += `<div class="event-item"><span class="event-time">${e.time}</span><span class="event-title">${e.title}</span></div>`;
-        html += `</div></div>`;
+      const activeCals = calendars.filter(c => c.id.trim());
+      if (activeCals.length === 0) {
+        html += `<div class="calendar-block"><div class="event-empty">カレンダーを登録してください</div></div>`;
+      } else {
+        for (const cal of activeCals) {
+          const events = scheduleData[cal.id]?.[tab] || [];
+          html += renderCalendarBlock(cal.name, cal.color, events, cal.mention);
+        }
       }
     }
     html += `</div>`;
@@ -424,48 +330,75 @@ function renderSchedule() {
   view.innerHTML = html;
 }
 
+function renderCalendarBlock(name, color, events, mention) {
+  let html = `<div class="calendar-block"><div class="calendar-header"><div class="calendar-dot" style="background:${color}"></div><span class="calendar-name">${name}</span><span class="calendar-count">${events.length}件</span></div>`;
+  if (events.length === 0) {
+    html += `<div class="event-empty">予定なし</div>`;
+  } else {
+    html += `<div class="event-list">`;
+    for (const e of events) html += `<div class="event-item"><span class="event-time">${e.time}</span><span class="event-title">${e.title}</span></div>`;
+    html += `</div>`;
+  }
+  return html + `</div>`;
+}
+
+// ===== プレビュー =====
 function renderPreview() {
   const showHeader = document.getElementById('headerToggle')?.checked;
   const merge = document.getElementById('mergeToggle')?.checked;
+  const apiKey = document.getElementById('apiKey')?.value?.trim();
+  const isSample = !apiKey || Object.keys(scheduleData).includes('__sample__');
+
   const buildText = (tab) => {
     const isToday = tab === 'today';
     const d = new Date(); if (!isToday) d.setDate(d.getDate()+1);
     let text = '';
     if (showHeader) text += `【${isToday?'今日':'明日'}のスケジュール ${formatDate(d)}】\n\n`;
-    const events = scheduleData[tab] || [];
-    if (events.length === 0) return text + 'スケジュールなし';
-    const grouped = {};
-    for (const m of members) grouped[m.name] = [];
-    for (const e of events) { if (grouped[e.person] !== undefined) grouped[e.person].push(e); else grouped[members[0].name].push(e); }
-    for (const m of members) {
-      const evs = grouped[m.name];
-      if (!evs || evs.length === 0) continue;
-      text += `${m.mention}\n`;
-      for (const e of evs) text += `${e.time} ${e.title}\n`;
+
+    if (isSample) {
+      const events = scheduleData['__sample__']?.[tab] || [];
+      if (events.length === 0) return text + 'スケジュールなし';
+      for (const e of events) text += `${e.time} ${e.title}\n`;
+      return text.trimEnd();
+    }
+
+    const activeCals = calendars.filter(c => c.id.trim());
+    let hasAny = false;
+    for (const cal of activeCals) {
+      const events = scheduleData[cal.id]?.[tab] || [];
+      if (events.length === 0) continue;
+      hasAny = true;
+      if (cal.mention) text += `${cal.mention}\n`;
+      for (const e of events) text += `${e.time} ${e.title}\n`;
       text += '\n';
     }
+    if (!hasAny) text += 'スケジュールなし';
     return text.trimEnd();
   };
+
   document.getElementById('previewBody').textContent =
     (currentTab === 'both' || merge) ? buildText('today') + '\n\n' + buildText('tomorrow') : buildText(currentTab);
 }
 
+// ===== タブ =====
 function switchTab(tab) {
   currentTab = tab;
   document.querySelectorAll('.tab').forEach((t,i) => { t.classList.remove('active'); if (['today','tomorrow','both'][i] === tab) t.classList.add('active'); });
   renderSchedule(); renderPreview();
 }
 
+// ===== プレビュー開閉 =====
 function togglePreview() {
   document.getElementById('previewContent').classList.toggle('open');
   document.getElementById('previewArrow').classList.toggle('open');
 }
 
+// ===== LINE =====
 function sendToLine() {
-  const text = document.getElementById('previewBody').textContent;
-  window.open(`https://line.me/R/share?text=${encodeURIComponent(text)}`, '_blank');
+  window.open(`https://line.me/R/share?text=${encodeURIComponent(document.getElementById('previewBody').textContent)}`, '_blank');
 }
 
+// ===== コピー =====
 function copyText() {
   navigator.clipboard.writeText(document.getElementById('previewBody').textContent).then(() => {
     const btn = document.getElementById('copyBtn');
@@ -475,39 +408,68 @@ function copyText() {
   });
 }
 
+// ===== ドロワー =====
 function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('overlay').classList.add('open'); }
 function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
 
-function addMember() {
-  const name = document.getElementById('memberName').value.trim();
-  const mention = document.getElementById('memberMention').value.trim();
-  if (!name || !mention) { showToast('名前とメンションを入力してください'); return; }
-  members.push({ name, mention, main: false });
-  document.getElementById('memberName').value = '';
-  document.getElementById('memberMention').value = '';
-  renderMemberList(); renderSchedule(); renderPreview();
+// ===== カレンダー管理 =====
+function addCalendar() {
+  const name = document.getElementById('calName').value.trim();
+  const id = document.getElementById('calId').value.trim();
+  const mention = document.getElementById('calMention').value.trim();
+  if (!name || !id) { showToast('名前とカレンダーIDを入力してください'); return; }
+  calendars.push({ name, id, mention, color: selectedColor });
+  document.getElementById('calName').value = '';
+  document.getElementById('calId').value = '';
+  document.getElementById('calMention').value = '';
+  renderCalendarList();
+  showToast(`${name}を追加しました`);
 }
 
-function removeMember(i) {
-  if (members.length <= 1) { showToast('最低1人必要です'); return; }
-  members.splice(i, 1);
-  renderMemberList(); renderSchedule(); renderPreview();
+function removeCalendar(i) {
+  if (calendars.length <= 1) { showToast('最低1つ必要です'); return; }
+  const name = calendars[i].name;
+  calendars.splice(i, 1);
+  renderCalendarList(); renderSchedule(); renderPreview();
+  showToast(`${name}を削除しました`);
 }
 
-function renderMemberList() {
-  document.getElementById('memberList').innerHTML = members.map((m, i) =>
-    `<div class="member-tag ${m.main?'main':''}"><div class="member-dot"></div><div class="member-info"><div class="member-tag-name">${m.name}${m.main?' <span style="font-size:10px;color:var(--today)">メイン</span>':''}</div><div class="member-tag-mention">${m.mention}</div></div><button class="member-remove" onclick="removeMember(${i})">×</button></div>`
+function renderCalendarList() {
+  document.getElementById('calendarList').innerHTML = calendars.map((c, i) =>
+    `<div class="calendar-tag">
+      <div class="cal-dot" style="background:${c.color}"></div>
+      <div class="cal-info">
+        <div class="cal-name">${c.name}${c.mention ? ' <span style="font-size:10px;color:var(--text-muted)">'+c.mention+'</span>' : ''}</div>
+        <div class="cal-id">${c.id || '（IDなし）'}</div>
+      </div>
+      <button class="cal-remove" onclick="removeCalendar(${i})">×</button>
+    </div>`
   ).join('');
 }
 
+// ===== 色ピッカー =====
+function renderColorPicker() {
+  document.getElementById('colorPicker').innerHTML = COLORS.map(c =>
+    `<div class="color-opt ${c === selectedColor ? 'selected' : ''}" style="background:${c}" onclick="selectColor('${c}')"></div>`
+  ).join('');
+}
+
+function selectColor(color) {
+  selectedColor = color;
+  renderColorPicker();
+}
+
+// ===== トースト =====
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2000);
 }
 
+// ===== 初期化 =====
 updateDates();
-renderMemberList();
+renderColorPicker();
+renderCalendarList();
 scheduleData = getSampleData();
 renderSchedule();
 renderPreview();

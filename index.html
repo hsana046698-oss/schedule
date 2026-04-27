@@ -540,10 +540,15 @@ loadSettings();
 updateDates();
 renderColorPicker();
 renderCalendarList();
-scheduleData = getSampleData();
-renderSchedule();
-renderPreview();
-refreshData();
+// APIキーがあればすぐ取得、なければサンプル表示
+const _initApiKey = document.getElementById('apiKey')?.value?.trim();
+if (!_initApiKey) {
+  scheduleData = getSampleData();
+  renderSchedule();
+  renderPreview();
+} else {
+  refreshData();
+}
 setInterval(updateDates, 60000);
 </script>
 </body>

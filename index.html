@@ -45,7 +45,6 @@
   .badge-tomorrow { background: rgba(126,184,200,0.15); color: var(--tomorrow); border: 1px solid rgba(126,184,200,0.3); }
   .section-date { font-size: 12px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
 
-  /* 時系列リスト */
   .timeline-block { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
   .timeline-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-bottom: 1px solid rgba(46,46,56,0.5); }
   .timeline-item:last-child { border-bottom: none; }
@@ -94,11 +93,12 @@
   .btn-add:active { background: var(--border); }
 
   .calendar-list { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
-  .calendar-tag { display: flex; align-items: center; gap: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; }
+  .calendar-tag { display: flex; align-items: center; gap: 8px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
   .cal-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
   .cal-info { flex: 1; min-width: 0; }
   .cal-name { font-size: 13px; font-weight: 500; }
   .cal-id { font-size: 10px; color: var(--text-muted); font-family: 'DM Mono', monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cal-edit { background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--text-dim); cursor: pointer; font-size: 11px; padding: 4px 8px; flex-shrink: 0; font-family: 'Noto Sans JP', sans-serif; }
   .cal-remove { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px; line-height: 1; padding: 4px; flex-shrink: 0; }
 
   .color-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
@@ -115,8 +115,21 @@
   input:checked + .slider { background: rgba(200,169,110,0.2); border-color: var(--accent2); }
   input:checked + .slider:before { transform: translateX(18px); background: var(--accent); }
 
+  /* 編集モーダル */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--bg); border: 1px solid var(--border); border-radius: 16px; padding: 24px; width: 100%; max-width: 340px; }
+  .modal-title { font-size: 15px; font-weight: 700; color: var(--accent); margin-bottom: 16px; }
+  .modal-actions { display: flex; gap: 8px; margin-top: 16px; }
+  .btn-save { flex: 1; padding: 13px; background: var(--accent); border: none; border-radius: 10px; color: var(--bg); font-family: 'Noto Sans JP', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; }
+  .btn-cancel { padding: 13px 16px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; color: var(--text-dim); font-family: 'Noto Sans JP', sans-serif; font-size: 13px; cursor: pointer; }
+
   .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(40px); background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; font-size: 12px; color: var(--text); transition: all 0.25s; z-index: 200; opacity: 0; white-space: nowrap; }
   .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  /* 保存インジケーター */
+  .save-indicator { font-size: 10px; color: var(--green); font-family: 'DM Mono', monospace; text-align: right; margin-top: 4px; opacity: 0; transition: opacity 0.3s; }
+  .save-indicator.show { opacity: 1; }
 </style>
 </head>
 <body>
@@ -162,6 +175,7 @@
   </div>
 </div>
 
+<!-- 設定ドロワー -->
 <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
   <div class="drawer-header">
@@ -170,11 +184,11 @@
   </div>
   <div class="drawer-section">
     <div class="drawer-section-label">APIキー</div>
-    <input type="password" class="input-field" id="apiKey" placeholder="AIza...">
-    <div style="font-size:11px; color:var(--text-muted);">※ 未設定時はサンプル表示</div>
+    <input type="password" class="input-field" id="apiKey" placeholder="AIza..." oninput="saveSettings()">
+    <div class="save-indicator" id="saveIndicator">✓ 保存済み</div>
   </div>
   <div class="drawer-section">
-    <div class="drawer-section-label">カレンダー登録</div>
+    <div class="drawer-section-label">カレンダー追加</div>
     <input type="text" class="input-field" id="calName" placeholder="表示名（例：二宮）">
     <input type="text" class="input-field" id="calId" placeholder="カレンダーID">
     <input type="text" class="input-field" id="calMention" placeholder="LINEメンション（例：@二宮さん）空欄OK">
@@ -197,11 +211,30 @@
   </div>
 </div>
 
+<!-- 編集モーダル -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <div class="modal-title">カレンダーを編集</div>
+    <input type="hidden" id="editIndex">
+    <input type="text" class="input-field" id="editName" placeholder="表示名">
+    <input type="text" class="input-field" id="editId" placeholder="カレンダーID">
+    <input type="text" class="input-field" id="editMention" placeholder="LINEメンション（空欄OK）">
+    <input type="text" class="input-field" id="editTag" placeholder="除去タグ（空欄OK）">
+    <div class="drawer-section-label" style="margin-bottom:6px;">色を選ぶ</div>
+    <div class="color-row" id="editColorPicker"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeEditModal()">キャンセル</button>
+      <button class="btn-save" onclick="saveEdit()">保存する</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 const COLORS = ['#c8a96e','#7eb8c8','#7ec87e','#c87e7e','#b87ec8','#7e9bc8','#c8b47e','#7ec8b4','#c8877e','#a0a0c8'];
 let selectedColor = COLORS[0];
+let selectedEditColor = COLORS[0];
 let currentTab = 'today';
 let calendars = [
   { name: '二宮', id: '', mention: '@二宮さん', tag: '【NINO】', color: '#c8a96e' },
@@ -213,6 +246,26 @@ let calendars = [
 let scheduleData = {};
 let isLoading = false;
 
+// ===== 保存・読み込み =====
+function saveSettings() {
+  const apiKey = document.getElementById('apiKey')?.value || '';
+  localStorage.setItem('schedule_settings', JSON.stringify({ apiKey, calendars }));
+  const ind = document.getElementById('saveIndicator');
+  ind.classList.add('show');
+  setTimeout(() => ind.classList.remove('show'), 1500);
+}
+
+function loadSettings() {
+  try {
+    const raw = localStorage.getItem('schedule_settings');
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (data.apiKey) document.getElementById('apiKey').value = data.apiKey;
+    if (data.calendars && data.calendars.length > 0) calendars = data.calendars;
+  } catch(e) {}
+}
+
+// ===== 日付 =====
 function formatDate(d) {
   const days = ['日','月','火','水','木','金','土'];
   return `${d.getMonth()+1}/${d.getDate()}（${days[d.getDay()]}）`;
@@ -223,12 +276,12 @@ function updateDates() {
   document.getElementById('tomorrowDate').textContent = '明日 ' + formatDate(tomorrow);
 }
 
-// タグを除去してタイトルをきれいにする
 function cleanTitle(title, tag) {
   if (!tag) return title;
   return title.replace(tag, '').trim();
 }
 
+// ===== サンプルデータ =====
 function getSampleData() {
   return {
     '__sample__': {
@@ -249,6 +302,7 @@ function getSampleData() {
   };
 }
 
+// ===== Google Calendar =====
 async function fetchCalendar(apiKey, cal) {
   const d1 = new Date(); d1.setHours(0,0,0,0);
   const d2 = new Date(d1); d2.setDate(d1.getDate()+1);
@@ -292,22 +346,17 @@ async function refreshData() {
   isLoading = false; renderSchedule(); renderPreview();
 }
 
-// 全イベントを時系列でまとめる
 function getMergedTimeline(tab) {
   const apiKey = document.getElementById('apiKey')?.value?.trim();
   const isSample = !apiKey || Object.keys(scheduleData).includes('__sample__');
-
   let allEvents = [];
   if (isSample) {
     allEvents = scheduleData['__sample__']?.[tab] || [];
   } else {
-    const activeCals = calendars.filter(c => c.id.trim());
-    for (const cal of activeCals) {
-      const events = scheduleData[cal.id]?.[tab] || [];
-      allEvents = allEvents.concat(events);
+    for (const cal of calendars.filter(c => c.id.trim())) {
+      allEvents = allEvents.concat(scheduleData[cal.id]?.[tab] || []);
     }
   }
-  // 時刻でソート
   allEvents.sort((a, b) => {
     if (a.time === '終日') return -1;
     if (b.time === '終日') return 1;
@@ -319,15 +368,12 @@ function getMergedTimeline(tab) {
 function renderSchedule() {
   const view = document.getElementById('scheduleView');
   if (isLoading) { view.innerHTML = `<div class="loading"><div class="spinner"></div>読み込み中...</div>`; return; }
-
   const tabs = currentTab === 'both' ? ['today','tomorrow'] : [currentTab];
   let html = '';
-
   for (const tab of tabs) {
     const isToday = tab === 'today';
     const d = new Date(); if (!isToday) d.setDate(d.getDate()+1);
     html += `<div class="schedule-section"><div class="section-header"><span class="section-badge ${isToday?'badge-today':'badge-tomorrow'}">${isToday?'今日':'明日'}</span><span class="section-date">${formatDate(d)}</span></div>`;
-
     const events = getMergedTimeline(tab);
     if (events.length === 0) {
       html += `<div class="timeline-block"><div class="event-empty">スケジュールなし</div></div>`;
@@ -341,10 +387,7 @@ function renderSchedule() {
             <div class="timeline-dot" style="background:${e.color}"></div>
           </div>
           <div class="timeline-right">
-            <div class="timeline-source">
-              <div class="source-dot" style="background:${e.color}"></div>
-              <span>${e.calName}${e.mention ? ' · ' + e.mention : ''}</span>
-            </div>
+            <div class="timeline-source"><div class="source-dot" style="background:${e.color}"></div><span>${e.calName}${e.mention ? ' · '+e.mention : ''}</span></div>
             <div class="timeline-title">${cleanedTitle}</div>
           </div>
         </div>`;
@@ -359,16 +402,13 @@ function renderSchedule() {
 function renderPreview() {
   const showHeader = document.getElementById('headerToggle')?.checked;
   const merge = document.getElementById('mergeToggle')?.checked;
-
   const buildText = (tab) => {
     const isToday = tab === 'today';
     const d = new Date(); if (!isToday) d.setDate(d.getDate()+1);
     let text = '';
     if (showHeader) text += `【${isToday?'今日':'明日'}のスケジュール ${formatDate(d)}】\n\n`;
-
     const events = getMergedTimeline(tab);
     if (events.length === 0) return text + 'スケジュールなし';
-
     for (const e of events) {
       const cleanedTitle = cleanTitle(e.title, e.tag);
       const sourcePart = e.mention ? e.mention : e.calName;
@@ -376,7 +416,6 @@ function renderPreview() {
     }
     return text.trimEnd();
   };
-
   document.getElementById('previewBody').textContent =
     (currentTab === 'both' || merge) ? buildText('today') + '\n\n' + buildText('tomorrow') : buildText(currentTab);
 }
@@ -404,6 +443,7 @@ function copyText() {
 function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('overlay').classList.add('open'); }
 function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
 
+// ===== カレンダー管理 =====
 function addCalendar() {
   const name = document.getElementById('calName').value.trim();
   const id = document.getElementById('calId').value.trim();
@@ -415,40 +455,88 @@ function addCalendar() {
   document.getElementById('calId').value = '';
   document.getElementById('calMention').value = '';
   document.getElementById('calTag').value = '';
+  saveSettings();
   renderCalendarList();
   showToast(`${name}を追加しました`);
 }
+
 function removeCalendar(i) {
   if (calendars.length <= 1) { showToast('最低1つ必要です'); return; }
   const name = calendars[i].name;
   calendars.splice(i, 1);
+  saveSettings();
   renderCalendarList(); renderSchedule(); renderPreview();
   showToast(`${name}を削除しました`);
 }
+
+function editCalendar(i) {
+  const cal = calendars[i];
+  document.getElementById('editIndex').value = i;
+  document.getElementById('editName').value = cal.name;
+  document.getElementById('editId').value = cal.id;
+  document.getElementById('editMention').value = cal.mention;
+  document.getElementById('editTag').value = cal.tag;
+  selectedEditColor = cal.color;
+  renderEditColorPicker();
+  document.getElementById('editModal').classList.add('open');
+}
+
+function saveEdit() {
+  const i = parseInt(document.getElementById('editIndex').value);
+  calendars[i] = {
+    name: document.getElementById('editName').value.trim(),
+    id: document.getElementById('editId').value.trim(),
+    mention: document.getElementById('editMention').value.trim(),
+    tag: document.getElementById('editTag').value.trim(),
+    color: selectedEditColor
+  };
+  saveSettings();
+  renderCalendarList(); renderSchedule(); renderPreview();
+  closeEditModal();
+  showToast('保存しました！');
+}
+
+function closeEditModal() {
+  document.getElementById('editModal').classList.remove('open');
+}
+
 function renderCalendarList() {
   document.getElementById('calendarList').innerHTML = calendars.map((c, i) =>
     `<div class="calendar-tag">
       <div class="cal-dot" style="background:${c.color}"></div>
       <div class="cal-info">
         <div class="cal-name">${c.name}${c.tag ? ' <span style="font-size:10px;color:var(--today)">'+c.tag+'</span>' : ''}</div>
-        <div class="cal-id">${c.id || '（IDなし・サンプル表示中）'}</div>
+        <div class="cal-id">${c.id || '（IDなし）'}</div>
       </div>
+      <button class="cal-edit" onclick="editCalendar(${i})">編集</button>
       <button class="cal-remove" onclick="removeCalendar(${i})">×</button>
     </div>`
   ).join('');
 }
+
+// ===== 色ピッカー =====
 function renderColorPicker() {
   document.getElementById('colorPicker').innerHTML = COLORS.map(c =>
     `<div class="color-opt ${c === selectedColor ? 'selected' : ''}" style="background:${c}" onclick="selectColor('${c}')"></div>`
   ).join('');
 }
 function selectColor(color) { selectedColor = color; renderColorPicker(); }
+
+function renderEditColorPicker() {
+  document.getElementById('editColorPicker').innerHTML = COLORS.map(c =>
+    `<div class="color-opt ${c === selectedEditColor ? 'selected' : ''}" style="background:${c}" onclick="selectEditColor('${c}')"></div>`
+  ).join('');
+}
+function selectEditColor(color) { selectedEditColor = color; renderEditColorPicker(); }
+
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2000);
 }
 
+// ===== 初期化 =====
+loadSettings();
 updateDates();
 renderColorPicker();
 renderCalendarList();
